@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#172b28">
+<meta name="description" content="Escape game d’intégration du Campus Montsouris. Trois équipes, trois parcours, un coffre commun.">
+<title>Paris Explorer · Le coffre de la promotion</title>
+<style>
+:root{color-scheme:light;--ink:#172b28;--soft:#40544c;--paper:#f5f0e3;--white:#fffcf4;--accent:#9d402b;--line:#c9c6b6;--gold:#ecd296}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:1rem/1.55 system-ui,sans-serif}button,input,select{font:inherit}button,a,input,select{touch-action:manipulation}a{color:#773220;text-underline-offset:.2em}button{cursor:pointer;border:1px solid var(--ink);border-radius:.5rem;background:var(--ink);color:white;min-height:44px;padding:.55rem .9rem}button.alt{background:transparent;color:var(--ink)}button:hover{filter:brightness(1.2)}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #b55b20;outline-offset:3px}
+.wrap{max-width:62rem;margin:auto;padding-inline:1.2rem}header{background:var(--ink);color:var(--white);padding:1.25rem 0 2.6rem;border-bottom:6px solid var(--gold)}.brand,.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.78rem;font-weight:800}.brand{color:var(--gold)}h1,h2,h3{font-family:Georgia,serif;line-height:1.12;margin:.3em 0 .5em}h1{font-size:clamp(2.6rem,8vw,5rem);max-width:13ch}h2{font-size:clamp(1.65rem,5vw,2.4rem)}h3{font-size:1.3rem}p{margin:.65em 0}.intro{max-width:57ch;color:#f3e9d3}.address{font-size:.85rem;color:var(--gold)}nav{display:flex;gap:.5rem;flex-wrap:wrap;padding:1rem 0}nav button[aria-current=page]{background:var(--ink);color:white}main{padding-bottom:2rem}.card{border:1px solid var(--line);border-radius:.7rem;background:var(--white);padding:clamp(.9rem,3vw,1.45rem);margin:.8rem 0}.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}.routes .card{display:flex;flex-direction:column;align-items:flex-start}.routes button{margin-top:auto}.eyebrow{color:var(--accent)}.muted{color:var(--soft)}.strip{padding:.75rem 1rem;border-left:4px solid var(--accent);background:#efe5d0}.actions{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:.8rem 0}.question{margin:1rem 0;padding:0;border:0;min-width:0}.question legend{font-weight:750;padding:0}.question label{display:block;padding:.42rem .6rem;margin:.38rem 0;background:#f5f1e5;border-radius:.4rem}.question input{margin-right:.5rem}.feedback{font-weight:700;min-height:1.5em}.reward{border:2px dashed var(--accent);background:#faf0d6}.digit{font:bold 2.5rem Georgia,serif}details{border-top:1px solid var(--line);padding:.65rem 0}summary{cursor:pointer;font-weight:700}.timer{font-variant-numeric:tabular-nums;font-weight:800}.row{display:flex;flex-wrap:wrap;gap:.65rem}.row label{flex:1 0 8rem}.row input,.row select{display:block;width:100%;max-width:20rem;border:1px solid #65746b;border-radius:.3rem;padding:.45rem;color:var(--ink);background:white}footer{border-top:1px solid var(--line);padding:1rem 0 2rem;color:var(--soft)}[hidden]{display:none!important}
+@media(max-width:670px){.routes{grid-template-columns:1fr;gap:0}.routes .card{margin:.35rem 0}}
+@media print{header,nav,footer,.no-print,button,.feedback,#reward{display:none!important}.wrap{max-width:none;padding:0}.card{break-inside:avoid;border-color:#888}body,.card{background:white;color:black}a{color:black}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="brand">Paris Explorer · dossier 01</div><h1>Le coffre de la promotion</h1><p class="intro">Une archive au CFA. Trois pistes dans le quartier. À votre retour, vos découvertes ouvrent ensemble le coffre.</p><p class="address">Campus Montsouris · 2 rue Lacaze · Paris 14ᵉ</p></div></header>
+<div class="wrap">
+<nav aria-label="Navigation">
+<button type="button" class="alt" data-view="home">Accueil</button>
+<button type="button" class="alt" data-view="final">Le coffre</button>
+
+</nav>
+<main id="main" tabindex="-1"></main>
+<noscript>Activez JavaScript pour ouvrir les cartes et jouer.</noscript>
+<footer>Jeu d’intégration · Du premier jour au dernier <span aria-hidden="true"> · </span><a href="#host">Espace animateur avec corrigé</a></footer>
+</div>
+<script>
+"use strict";
+const base = "2 rue Lacaze, 75014 Paris";
+const routes = [
+  {id:"A", symbol:"Goutte", digit:4, title:"Le secret sous la butte", place:"Rue de la Tombe-Issoire, angle avenue Reille",
+   target:"Intersection rue de la Tombe-Issoire et avenue Reille, Paris", via:[],
+   walk:"4 à 7 min par trajet", total:"16 à 22 min",
+   directions:"Depuis le CFA, gagnez la rue de la Tombe-Issoire, puis rejoignez l’avenue Reille. Restez sur le trottoir public à hauteur du réservoir. Revenez par la même rue.",
+   brief:"Deux récits circulent autour de Montsouris. Votre mission est de retrouver le nom de la rue, puis de distinguer la légende de ce que l’on peut documenter.",
+   evidence:"Carte d’archive reconstituée. Des travaux se terminent en 1874. Deux bassins superposés stockent une ressource distribuée dans les habitations.",
+   questions:[
+     {q:"Quel nom de rue relevez-vous sur place ?", options:["Rue de la Tombe-Issoire","Rue du Père-Corentin","Rue Nansouty"], correct:0},
+     {q:"Quel dossier correspond à la butte et aux deux bassins ?", options:["Une station de train sous la butte","Un réservoir d’eau potable","La tombe du géant Isoré"], correct:1}
+   ],
+   hint1:"Cherchez le nom de la rue qui rejoint l’avenue Reille côté réservoir. Des bassins servent ici à stocker une ressource.",
+   hint2:"L’archive parle de ce qui arrive aux robinets. Le récit d’Isoré appartient à la légende.",
+   backup:"Carte de secours. Vous êtes à l’angle de l’avenue Reille et de la rue de la Tombe-Issoire. La butte couvre un ouvrage de stockage.",
+   reveal:"Le récit du géant Isoré est une légende. Le réservoir, lui, sert au stockage de l’eau potable. Revenez avec une phrase expliquant la différence.",
+   sources:[["Ville de Paris, le réservoir","https://prod-v3.paris.fr/pages/a-la-decouverte-du-tresor-cache-du-reservoir-montsouris-7561"],["Archives locales, les réservoirs","https://www.api-site.paris.fr/mairies/public/assets/2017%2F6%2Fsouris_6.pdf"],["Le récit d’Isoré","https://www.pariszigzag.fr/insolite/histoire-insolite-paris/le-parc-montsouris-au-tournant-du-xxe-siecle/"]]},
+  {id:"B", symbol:"Feuille", digit:7, title:"Le rendez-vous à Montsouris", place:"Angle rue Nansouty et boulevard Jourdan",
+   target:"Intersection rue Nansouty et boulevard Jourdan, Paris", via:["Montsouris – Tombe Issoire, Paris"],
+   walk:"6 à 9 min par trajet", total:"20 à 26 min",
+   directions:"Rejoignez le boulevard Jourdan, puis l’angle de la rue Nansouty. Repérez le parc depuis la voie publique. Le retour se fait par le boulevard Jourdan puis vers la rue Lacaze.",
+   brief:"Deux équipiers attendent à deux endroits différents. Le carnet de la promotion décrit un rendez-vous près du parc, au croisement du boulevard Jourdan et d’une rue dont le nom a été effacé.",
+   evidence:"Message 1. « Je suis à l’angle de la rue Nansouty et du boulevard Jourdan. » Message 2. « Je suis à l’angle de la rue Gazan et de l’avenue Reille. »",
+   questions:[
+     {q:"Quelle rue rejoint Jourdan à votre point de rendez-vous ?", options:["Rue Gazan","Rue Lacaze","Rue Nansouty"], correct:2},
+     {q:"Quel message correspond au carnet et à ce que vous observez ?", options:["Message 1","Message 2"], correct:0}
+   ],
+   hint1:"Le carnet donne déjà le nom de l’un des deux axes. Retrouvez l’autre sur la plaque ou le plan.",
+   hint2:"Le bon message cite Jourdan. La fiche de la Ville confirme que le parc est accessible par le boulevard Jourdan et la rue Nansouty.",
+   backup:"Carte de secours. Le point proposé est à la rencontre de la rue Nansouty et du boulevard Jourdan. Le parc est le repère du rendez-vous.",
+   reveal:"Vous avez trouvé le bon rendez-vous. Au retour, donnez deux indications qui permettraient à un autre apprenti de refaire le trajet.",
+   sources:[["Ville de Paris, accès au parc","https://www.paris.fr/lieux/parc-montsouris-1810"]]},
+  {id:"C", symbol:"Porte", digit:2, title:"Le message du 25 août", place:"Porte d’Orléans, secteur place du 25-Août-1944",
+   target:"Place du 25 Août 1944, Paris", via:["35 rue du Père-Corentin, Paris"],
+   walk:"7 à 10 min par trajet", total:"22 à 28 min",
+   directions:"Quittez la rue Lacaze par la rue du Père-Corentin et gagnez le secteur porte d’Orléans. Arrêtez-vous sur un trottoir dégagé à proximité de la place. Revenez par la rue du Père-Corentin.",
+   brief:"Un itinéraire de la Libération de Paris a été mélangé. Retrouvez la date dans le nom de la place et reconstituez le trajet de Leclerc à l’aide de trois cartes.",
+   evidence:"Carte Denfert. « Sur la route entre l’entrée dans Paris et le quartier général. » Carte Montparnasse. « Leclerc y installe son poste de commandement. » Carte Porte d’Orléans. « Entrée dans Paris. »",
+   questions:[
+     {q:"Quelle date figure dans le nom de la place ?", options:["18 juin 1940","25 août 1944","8 mai 1945"], correct:1},
+     {q:"Dans quel ordre faut-il ranger les trois cartes ?", options:["Denfert → Montparnasse → Porte d’Orléans","Montparnasse → Porte d’Orléans → Denfert","Porte d’Orléans → Denfert → Montparnasse"], correct:2}
+   ],
+   hint1:"Le nom de la place donne la date. Placez d’abord la carte qui parle d’une entrée dans Paris.",
+   hint2:"Le poste de commandement de Leclerc est votre point d’arrivée. Denfert se trouve entre les deux.",
+   backup:"Carte de secours. Le nom du lieu est Place du 25-Août-1944. L’équipe peut lire cette carte sans traverser la place.",
+   reveal:"Le 25 août 1944, Leclerc entre par la porte d’Orléans, passe par Denfert et rejoint Montparnasse. Replacez ces repères sur la carte collective à votre retour.",
+   sources:[["Musée de la Résistance, la place","https://www.museedelaresistanceenligne.org/media5614-Place-du-25-Aot-1944-Paris-XIVe-arrondissement"],["Ville de Paris, Denfert et l’itinéraire","https://www.paris.fr/pages/dans-les-coulisses-du-nouveau-musee-de-la-liberation-de-6493/"]]}
+];
+const order = ["Porte","Goutte","Feuille"];
+const code = order.map(symbol => routes.find(route => route.symbol === symbol).digit).join("");
+const main = document.querySelector("#main");
+const storageKey = "paris-explorer-montsouris-v1";
+let state;
+try { state = JSON.parse(localStorage.getItem(storageKey)) || {}; } catch { state = {}; }
+function save() {
+  try { localStorage.setItem(storageKey, JSON.stringify(state)); } catch {}
+}
+function map(from, to, via=[]) {
+  const query = new URLSearchParams({api:"1", origin:from, destination:to, travelmode:"walking"});
+  if (via.length) query.set("waypoints", via.join("|"));
+  return "https://www.google.com/maps/dir/?" + query.toString();
+}
+function link(url,label) { return `<a href="${url.replaceAll("&","&amp;")}" target="_blank" rel="noopener noreferrer">${label}</a>`; }
+function sources(items) { return `<details><summary>Sources de la carte</summary><ul>${items.map(([label,url])=>`<li>${link(url,label)}</li>`).join("")}</ul></details>`; }
+function question(item, name, saved) {
+  return `<fieldset class="question"><legend>${item.q}</legend>${item.options.map((option,i)=>`<label><input type="radio" name="${name}" value="${i}" ${i===saved?"checked":""} required> ${option}</label>`).join("")}</fieldset>`;
+}
+const startQ = {q:"Quelle affirmation correspond à l’histoire du Campus ?", options:["Le centre de formation en alternance créé en 1986 est à l’origine du réseau Cerfal.","Le réseau Cerfal est né du parc Montsouris.","1986 correspond à l’ouverture de la gare RER."],correct:0};
+const campusSource = [["Brochure du Campus Montsouris","https://www.campusmontsouris.fr/wp-content/uploads/2024/12/Brochure-Campus-Montsouris-au-13-11-2024.pdf"]];
+const archive = "Trois fragments d’archive à rapprocher. « 1986 : création d’un centre de formation en alternance. » « Le réseau Cerfal prend naissance au Campus Montsouris. » « 2 rue Lacaze : votre point de départ. »";
+function home() {
+  return `<section class="card"><p class="eyebrow">Carte commune · ouverture</p><h2>L’archive du campus</h2><p>${archive}</p><form id="start-form">${question(startQ,"archive",state.started?0:undefined)}<button>Vérifier l’archive</button><p class="feedback" role="status">${state.started?"Archive validée. Les équipes peuvent partir.":""}</p></form>${sources(campusSource)}</section>
+  <h2>Choisissez votre mission</h2><p class="muted">Un téléphone par équipe. Prenez l’enveloppe annoncée par l’animateur et notez votre heure de retour.</p>
+  <div class="routes">${routes.map(r=>`<article class="card"><span class="eyebrow">Équipe ${r.id} · ${r.total} estimées</span><h3>${r.title}</h3><p>${r.place}</p><button data-view="${r.id}">Ouvrir la carte ${r.id}</button></article>`).join("")}</div>`;
+}
+function mission(r) {
+  const progress = state[r.id] || {};
+  return `<section class="card"><div class="eyebrow">Carte ${r.id} · mission de terrain</div><h2>${r.title}</h2><p>${r.brief}</p><p class="strip"><strong>${r.place}</strong><br>${r.directions}</p><p><strong>Marche estimée</strong> · ${r.walk} pour chacun des deux sens.<br><strong>Mission entière</strong> · ${r.total}, marche et énigme comprises. Retour demandé dans les 30 minutes.</p><div class="actions no-print">${link(map(base,r.target,r.via),"Ouvrir l’aller à pied")}${link(map(r.target,base,[...r.via].reverse()),"Ouvrir le retour à pied")}</div>
+  <div class="actions no-print"><button type="button" id="timer-start" class="alt" ${progress.deadline?"hidden":""}>Démarrer mes 30 min</button><span class="timer" id="timer"></span><button type="button" class="alt" id="print">Imprimer cette carte</button></div><p class="muted">Le chronomètre de ce téléphone est indicatif. L’heure annoncée au départ fait foi.</p></section>
+  <section class="card"><p class="eyebrow">Carte ${r.id} · pièce du dossier</p><h3>Les éléments à examiner</h3><p>${r.evidence}</p><form id="mission-form">${r.questions.map((q,i)=>question(q,"q"+i,progress.solved?q.correct:undefined)).join("")}<button>Vérifier mes réponses</button><p class="feedback" role="status"></p></form>
+  <details><summary>Indice 1 · un petit coup de pouce</summary><p>${r.hint1}</p></details><details><summary>Indice 2 · si l’équipe bloque</summary><p>${r.hint2}</p></details><details><summary>Carte de secours · essai à distance ou repère inaccessible</summary><p>${r.backup}</p></details>${sources(r.sources)}</section>
+  <section id="reward" class="card reward" ${progress.solved?"":"hidden"}><p class="eyebrow">Fragment à rapporter</p><h3>${r.symbol}</h3><p class="digit">${r.digit}</p><p>${r.reveal}</p><button class="alt" data-view="final">Rejoindre le coffre</button></section>`;
+}
+function capsule() {
+  return `<section class="card reward" id="capsule" ${state.open?"":"hidden"}><p class="eyebrow">Coffre ouvert · capsule de la promotion</p><h2>À ouvrir le dernier jour</h2><p>Inscrivez sur la carte collective ce que les trois équipes ont découvert. Chacun peut ensuite écrire sa lettre et la placer dans une enveloppe fermée à son nom.</p><ul><li>Aujourd’hui, ce qui me paraît nouveau ou difficile, c’est…</li><li>À la fin de la formation, j’aimerais être capable de…</li><li>Le premier pas que je peux faire, c’est…</li></ul><p>Lors de la réouverture, relisez votre lettre en privé et choisissez un exemple concret du chemin parcouru. Remettez les lettres papier à la personne chargée de garder la capsule.</p></section>`;
+}
+function finalView() {
+  return `<section class="card"><p class="eyebrow">Carte commune · retour au CFA</p><h2>Réunissez les trois fragments</h2><p>Chaque équipe présente sa découverte, puis montre le chiffre associé à son symbole. L’archive donne l’ordre du cadenas.</p><details><summary>Relire l’archive du cadenas</summary><p>« Je franchis d’abord le seuil. Ensuite, je bois. Enfin, je m’assois sous les arbres. »</p></details><form id="lock-form"><div class="row">${[1,2,3].map(i=>`<label>Chiffre ${i}<input name="d${i}" inputmode="numeric" pattern="[0-9]" maxlength="1" required></label>`).join("")}</div><div class="actions"><button>Ouvrir le coffre</button></div><p class="feedback" role="status"></p></form></section>${capsule()}`;
+}
+function host() {
+  return `<section class="card"><p class="eyebrow">Animation · avec corrigé</p><h2>Préparer la partie</h2><p>Base de test : trois équipes de quatre à six, une mission et un téléphone par équipe. Fixez une heure de retour commune. Ouvrez les liens directs et envoyez l’adresse de la carte à chaque équipe. Les fragments se partagent au CFA de vive voix ou en montrant les écrans. La progression reste sur chaque téléphone.</p><p class="no-print">Liens directs : <a href="#A">équipe A</a> · <a href="#B">équipe B</a> · <a href="#C">équipe C</a> · <a href="#final">coffre commun</a>.</p><ol><li><strong>0–15 min.</strong> Accueil, archive et distribution des missions.</li><li><strong>15–45 min.</strong> Terrain en parallèle. Donner un contact au CFA et fixer l’encadrement selon le groupe.</li><li><strong>45–60 min.</strong> Débrief, placement des repères sur le plan et ouverture du coffre.</li><li><strong>60–80 min.</strong> Lettres et fermeture de la capsule. Désigner la personne qui la conserve et fixer le moment de restitution.</li></ol><p>Avant la rentrée, marcher chaque trajet depuis le 2 rue Lacaze. Relever l’aller, le retour et les traversées, puis tester l’énigme à l’arrêt. Confirmer les plaques, la visibilité du réservoir et la place pour un petit groupe. Si un arrêt est indisponible ou si le groupe doit rester au CFA, utiliser les cartes de secours.</p><p>Matériel : enveloppes individuelles, plan commun, stylos et coffre facultatif. Un coffre physique peut être réglé sur le même code que le coffre numérique. Les lettres restent sur papier. Le corrigé est accessible depuis ce site statique. Pendant le jeu, partagez les liens d’équipe et gardez le corrigé pour l’animation.</p><p>Partenaire facultatif : la Librairie Lurçat peut être sollicitée pour une future carte Villa Seurat. Le jeu pilote fonctionne avec ses trois cartes actuelles.</p><div class="actions no-print"><button type="button" id="print">Imprimer les cartes animateur</button><button type="button" class="alt" id="reset">Réinitialiser ce téléphone</button></div></section>
+  <section class="card"><h3>Carte de départ et carte finale</h3><p>${archive}</p><p>Rappel du cadenas : « Je franchis d’abord le seuil. Ensuite, je bois. Enfin, je m’assois sous les arbres. »</p><p><strong>Corrigé</strong> · ${order.join(" → ")} · code <strong>${code}</strong>.</p></section>
+  ${routes.map(r=>`<section class="card"><p class="eyebrow">Carte animateur ${r.id}</p><h3>${r.title}</h3><p><strong>${r.place}</strong> · ${r.walk} par sens estimées · ${r.total} au total estimées.</p><p>${r.directions}</p><p>${r.evidence}</p><ol>${r.questions.map(q=>`<li>${q.q} <strong>${q.options[q.correct]}</strong></li>`).join("")}</ol><p><strong>Indice 1</strong> · ${r.hint1}</p><p><strong>Indice 2</strong> · ${r.hint2}</p><p>${r.backup}</p><p><strong>Fragment</strong> · ${r.symbol} / ${r.digit}</p></section>`).join("")}
+  <section class="card"><h3>Carte capsule</h3><p>Aujourd’hui, ce qui me paraît nouveau ou difficile, c’est…</p><p>À la fin de la formation, j’aimerais être capable de…</p><p>Le premier pas que je peux faire, c’est…</p></section>`;
+}
+const views = {home,final:finalView,host};
+function render(focus=false) {
+  const requested = location.hash.slice(1);
+  const route = routes.find(r=>r.id===requested);
+  const view = route ? route.id : Object.hasOwn(views,requested) ? requested : "home";
+  main.innerHTML = route ? mission(route) : views[view]();
+  for (const button of document.querySelectorAll("nav button")) {
+    if (button.dataset.view===view) button.setAttribute("aria-current","page");
+    else button.removeAttribute("aria-current");
+  }
+  if (focus) main.focus();
+  updateTimer();
+}
+function updateTimer() {
+  const timer = document.querySelector("#timer");
+  const deadline = state[location.hash.slice(1)]?.deadline;
+  if (!timer || !deadline) return;
+  const seconds = Math.max(0,Math.ceil((deadline-Date.now())/1000));
+  timer.textContent = seconds ? `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,"0")} restantes` : "Retour au CFA";
+}
+document.addEventListener("click",event=>{
+  const button = event.target.closest("button");
+  if (!button) return;
+  if (button.dataset.view) {
+    if (location.hash !== "#"+button.dataset.view) location.hash = button.dataset.view;
+    return;
+  }
+  if (button.id==="timer-start") {
+    const id = location.hash.slice(1);
+    state[id] = {...state[id],deadline:Date.now()+30*60*1000};
+    save();
+    button.hidden = true;
+    updateTimer();
+  }
+  if (button.id==="print") window.print();
+  if (button.id==="reset" && window.confirm("Effacer la progression et les chronomètres de ce téléphone ?")) {
+    state = {};
+    save();
+    location.hash = "home";
+  }
+});
+document.addEventListener("submit",event=>{
+  event.preventDefault();
+  const form = event.target;
+  const data = new FormData(form);
+  const feedback = form.querySelector(".feedback");
+  if (form.id==="start-form") {
+    if (data.get("archive")!==String(startQ.correct)) {
+      feedback.textContent = "Reliez la date au centre de formation, puis le campus au réseau.";
+      return;
+    }
+    state.started = true;
+    feedback.textContent = "Archive validée. Les équipes peuvent partir.";
+  }
+  if (form.id==="mission-form") {
+    const route = routes.find(r=>location.hash==="#"+r.id);
+    if (!route.questions.every((q,i)=>data.get("q"+i)===String(q.correct))) {
+      feedback.textContent = "Au moins une réponse reste à vérifier. Comparez vos observations avec la carte ou ouvrez un indice.";
+      return;
+    }
+    state[route.id] = {...state[route.id],solved:true};
+    feedback.textContent = "Mission réussie. Montrez votre fragment aux autres équipes au retour.";
+    document.querySelector("#reward").hidden = false;
+  }
+  if (form.id==="lock-form") {
+    const attempt = [1,2,3].map(i=>data.get("d"+i)).join("");
+    if (attempt!==code) {
+      feedback.textContent = "Le coffre reste fermé. Relisez l’archive du cadenas pour vérifier l’ordre des symboles.";
+      return;
+    }
+    state.open = true;
+    feedback.textContent = "Coffre ouvert. Votre capsule est prête.";
+    document.querySelector("#capsule").hidden = false;
+  }
+  save();
+});
+window.addEventListener("hashchange",()=>{render(true);window.scrollTo(0,0);});
+setInterval(updateTimer,1000);
+render();
+</script>
+</body>
+</html>
